@@ -48,7 +48,7 @@ class ParseError : public ReportingException {
 public:
    std::string msg;
 
-   ParseError(const char *msg);
+   ParseError(char *msg);
 
    virtual const char *what();
 

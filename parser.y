@@ -2,7 +2,7 @@
    #include "expr.h"
    #include "lexer.h"
 
-   void yyerror(Expr **, char **, char **, const char **err, const char *s);
+   void yyerror(Expr **, char **, char **, char **err, const char *s);
 %}
 
 %union {
@@ -14,7 +14,7 @@
 %parse-param {Expr **root}
 %parse-param {char **funcname}
 %parse-param {char **varname}
-%parse-param {const char **err}
+%parse-param {char **err}
 
 %define parse.error detailed
 
@@ -51,108 +51,108 @@ stmt:
 isolate:
      VAR
       {
-         $$ = new_var_expr($1);
+         *root = $$ = new_var_expr($1);
       }
    | ARG
       {
-         $$ = new_arg_expr();
+         *root = $$ = new_arg_expr();
       }
    | NUM
       {
-         $$ = new_num_expr($1);
+         *root = $$ = new_num_expr($1);
       }
    | '(' expr ')'
       {
-         $$ = $2;
+         *root = $$ = $2;
       }
    | '[' expr ']'
       {
-         $$ = new_unary(ABS, $2);
+         *root = $$ = new_unary(ABS, $2);
       }
    | FUNC '(' expr ')'
       {
-         $$ = new_apply($1, $3);
+         *root = $$ = new_apply($1, $3);
       }
    | FUNC '[' expr ']'
       {
-         $$ = new_apply($1, new_unary(ABS, $3));
+         *root = $$ = new_apply($1, new_unary(ABS, $3));
       }
    | FUNC '(' ')'
       {
-         $$ = new_apply($1, new_num_expr(0));
+         *root = $$ = new_apply($1, new_num_expr(0));
       }
    ;
 
 pow:
      isolate
       {
-         $$ = $1;
+         *root = $$ = $1;
       }
    | isolate '^' pow
       {
-         $$ = new_binary(POW, $1, $3);
+         *root = $$ = new_binary(POW, $1, $3);
       }
    | isolate '^' '-' pow
       {
-         $$ = new_binary(POW, $1, new_unary(NEG, $4));
+         *root = $$ = new_binary(POW, $1, new_unary(NEG, $4));
       }
    ;
 
 cmul:
      pow
       {
-         $$ = $1;
+         *root = $$ = $1;
       }
    | cmul pow
       {
-         $$ = new_binary(MUL, $1, $2);
+         *root = $$ = new_binary(MUL, $1, $2);
       }
    ;
    
 neg:
      cmul
       {
-         $$ = $1;
+         *root = $$ = $1;
       }
    | '-' cmul
       {
-         $$ = new_unary(NEG, $2);
+         *root = $$ = new_unary(NEG, $2);
       }
    ;
 
 mul:
      neg
       {
-         $$ = $1;
+         *root = $$ = $1;
       }
    | mul '*' neg
       {
-         $$ = new_binary(MUL, $1, $3);
+         *root = $$ = new_binary(MUL, $1, $3);
       }
    | mul '/' neg
       {
-         $$ = new_binary(DIV, $1, $3);
+         *root = $$ = new_binary(DIV, $1, $3);
       }
    ;
 
 expr:
      mul
       {
-         $$ = $1;
+         *root = $$ = $1;
       }
    | expr '+' mul
       {
-         $$ = new_binary(ADD, $1, $3);
+         *root = $$ = new_binary(ADD, $1, $3);
       }
    | expr '-' mul
       {
-         $$ = new_binary(SUB, $1, $3);
+         *root = $$ = new_binary(SUB, $1, $3);
       }
    ;
 
 %%
 
-void yyerror(Expr **, char **, char **, const char **err, const char *s) {
+void yyerror(Expr **, char **, char **, char **err, const char *s) {
    *err = strdup(s);
 }
 

@@ -42,6 +42,7 @@ void repl() {
          continue;
       }
 
+      expr = nullptr;
       try {
          if (conv_eval_str(rt, line.c_str(), ectx, &expr, result)) {
             printf("> ");
@@ -50,10 +51,13 @@ void repl() {
          }
 
          printf("\n");
-         destroy_expr(expr);
       }
       catch (ReportingException *e) {
          e->report();
+      }
+
+      if (expr != nullptr) {
+        destroy_expr(expr);
       }
    }
 

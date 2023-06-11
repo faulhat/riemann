@@ -34,9 +34,11 @@ void NameResFail::report() {
    printf("Name could not be resolved.\nName given: %s\n\n", name.c_str());
 }
 
-ParseError::ParseError(const char *_msg)
-   : msg(_msg)
-{}
+ParseError::ParseError(char *_msg)
+   : msg((const char *)_msg)
+{
+  free(_msg);
+}
 
 const char *ParseError::what() {
    return "Error caught from parser.";
@@ -216,7 +218,7 @@ bool conv_eval_str(JitRuntime &rt,
    char *funcname = nullptr,
         *varname = nullptr;
 
-   const char *err = nullptr;
+   char *err = nullptr;
    bool hasResult = false;
 
    yy_scan_string(in);
