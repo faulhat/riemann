@@ -3,6 +3,8 @@
    #include "lexer.h"
 
    void yyerror(Expr **, char **, char **, char **err, const char *s);
+
+
 %}
 
 %union {
@@ -25,6 +27,8 @@
 %type <fval> NUM
 %type <sval> FUNC VAR
 %type <expr> isolate pow cmul neg mul expr stmt
+
+%destructor { free($$); } FUNC VAR
 
 %%
 

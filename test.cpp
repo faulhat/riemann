@@ -104,7 +104,7 @@ void run_tests() {
       "G = 2^x * F(x)",
       "Ln = Log(x)/Log(e)",
       "One = Sin(x)^2 + Cos(x)^2",
-      "TaySin = x - (x^3/6) + (x^5/120)"
+      "TaylorSin = x - (x^3/6) + (x^5/120)"
    };
 
    ExecCtx ectx;
@@ -132,7 +132,7 @@ void run_tests() {
       { "Cos(2pi)", "Cos(0)" },
       { "Cos(2)^2", "1 - Sin(2)^2" },
       { "Sqrt(5)", "5^(1/2)" },
-      { "Sin(0.2)", "TaySin(0.2)" }};
+      { "Sin(0.2)", "TaylorSin(0.2)" }};
 
    for (auto t: eqtests) {
       test_equal(rt, t.first, t.second, ectx, &ctr, &fails);
