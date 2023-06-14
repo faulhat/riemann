@@ -20,7 +20,7 @@ void test_expr(JitRuntime &rt,
       if (conv_eval_str(rt, in, ectx, &expr, result, &funcname, &varname)) {
          printf("> ");
          print_expr(expr, (FILE *)stdout);
-         printf(" = %.4f\n", result);
+         printf(" = %.2f\n", result);
          if (result < expected - delta || result > expected + delta) {
             printf("FAILED! Expected: %f\n\n", expected);
             ++*fails;
@@ -67,13 +67,13 @@ void test_equal(JitRuntime &rt,
       assert(funcname == nullptr && varname == nullptr);
       printf("> ");
       print_expr(expr_a, (FILE *)stdout);
-      printf(" = %.4f\n", res_a);
+      printf(" = %.2f\n", res_a);
       
       conv_eval_str(rt, in_b, ectx, &expr_b, res_b, &funcname, &varname);
       assert(funcname == nullptr && varname == nullptr);
       printf("> ");
       print_expr(expr_b, (FILE *)stdout);
-      printf(" = %.4f\n", res_b);
+      printf(" = %.2f\n", res_b);
 
       if (res_a < res_b - delta || res_a > res_b + delta) {
          printf("FAILED! Above results should have been equal.\n\n");
@@ -94,7 +94,7 @@ void test_equal(JitRuntime &rt,
    destroy_expr(expr_b);
 }  
 
-void run_tests() {
+int run_tests() {
    JitRuntime rt;
    Expr *expr;
    char *funcname;
@@ -143,5 +143,7 @@ void run_tests() {
    for (auto f: ectx.fnTable) {
       rt.release(*f.second);
    }
+
+   return fails;
 }
  

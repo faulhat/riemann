@@ -47,7 +47,7 @@ void repl() {
          if (conv_eval_str(rt, line.c_str(), ectx, &expr, result)) {
             printf("> ");
             print_expr(expr, (FILE *)stdout);
-            printf(" = %.4f\n", result);
+            printf(" = %.2f\n", result);
          }
 
          printf("\n");
