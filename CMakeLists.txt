@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.5)
 
 Project(Riemann)
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+
 find_program(LEX_EXE
     flex
 )
@@ -63,7 +66,11 @@ Add_Executable(rcalc
    repl.cpp 
    test.cpp
    main.cpp
+   graph.cpp
    ${ASMJIT_SRC})
 
-Target_Link_Libraries(rcalc ${ASMJIT_DEPS})
+Target_Link_Libraries(rcalc ${ASMJIT_DEPS} ${GTK3_LIBRARIES})
+Include_Directories(${GTK3_INCLUDE_DIRS})
+Link_Directories(${GTK3_LIBRARY_DIRS})
+Add_Definitions(${GTK3_CFLAGS_OTHER})
 
